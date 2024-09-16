@@ -126,16 +126,17 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
+## Environments
 .env
+transcribe/.env
 .venv
 env/
-OmarEnv/
 venv/
 ENV/
 env.bak/
 venv.bak/
-.gpt_api.py
+gpt_api.py
+transcribe/gpt_api.py
 # Spyder project settings
 .spyderproject
 .spyproject
