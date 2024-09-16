@@ -1,24 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import TranscriptionForm from "./components/TranscriptionForm";
+import ResultTable from "./components/ResultTable";
+import "./App.css";
+import ScoreCircle from "./components/ScoreCircle";
+import Sidebar from "./components/Sidebar";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
 
 function App() {
+  const [transcriptionResults, setTranscriptionResults] = useState([]);
+
+  const handleTranscriptionComplete = (results) => {
+    setTranscriptionResults(results);
+  };
+
+  const calculateTruthPercentage = (results) => {
+    const totalCount = results.length;
+    const trueCount = results.filter(
+      (result) => result.Vérification === "Vraie"
+    ).length;
+    return totalCount > 0 ? Math.round((trueCount / totalCount) * 100) : 0;
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="app">
+        <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/app"
+              element={
+                <div className="container">
+                  <h1>Vérification des faits</h1>
+                  <TranscriptionForm
+                    onTranscriptionComplete={handleTranscriptionComplete}
+                  />
+                  <ResultTable results={transcriptionResults} />
+                  <ScoreCircle
+                    percentage={calculateTruthPercentage(transcriptionResults)}
+                  />
+                </div>
+              }
+            />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
