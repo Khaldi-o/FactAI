@@ -1,0 +1,14 @@
+tafrigh[wit]==1.1.3
+ffmpeg-python
+yt-dlp==2023.7.6
+pydub==0.25.1
+python-dotenv==1.0.1
+openai==0.28
+tabulate
+fpdf
+reportlab
+pandas
+nltk
+anthropic
+flask
+flask-cors
