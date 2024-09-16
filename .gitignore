@@ -135,6 +135,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+OmarEnv/
 gpt_api.py
 transcribe/gpt_api.py
 # Spyder project settings
