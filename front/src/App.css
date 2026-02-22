@@ -1,29 +1,29 @@
 body {
   background: linear-gradient(243deg, #300c20 0%, #0e0431 94%);
   margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   color: aliceblue;
-  overflow: auto;
+  overflow-x: hidden;
 }
 
 .container {
-  max-width: 960px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 h1 {
   font-size: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 @media screen and (max-width: 768px) {
   .container {
-    padding: 10px;
+    padding: 10px 10px 22px;
   }
 
   h1 {

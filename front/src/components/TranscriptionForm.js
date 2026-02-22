@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./TranscriptionForm.css";
+
+const LOADING_MESSAGES = [
+  "Transcription en cours...",
+  "Analyse des informations...",
+  "Génération du tableau de vérification...",
+];
 
 const TranscriptionForm = ({ onTranscriptionComplete }) => {
   const [inputType, setInputType] = useState("");
@@ -7,16 +13,53 @@ const TranscriptionForm = ({ onTranscriptionComplete }) => {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [localFilePath, setLocalFilePath] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (!isLoading) {
+      setLoadingStep(0);
+      return undefined;
+    }
+
+    const intervalId = setInterval(() => {
+      setLoadingStep((prev) => Math.min(prev + 1, LOADING_MESSAGES.length - 1));
+    }, 4500);
+
+    return () => clearInterval(intervalId);
+  }, [isLoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
+
+    if (!inputType) {
+      setErrorMessage("Choisis une source: vidéo YouTube ou fichier local.");
+      return;
+    }
+
+    if (!languageSign.trim()) {
+      setErrorMessage("La langue est obligatoire (ex: FR, EN).");
+      return;
+    }
+
+    if (inputType === "youtube" && !youtubeUrl.trim()) {
+      setErrorMessage("Le lien YouTube est obligatoire.");
+      return;
+    }
+
+    if (inputType === "local" && !localFilePath.trim()) {
+      setErrorMessage("Le chemin du fichier local est obligatoire.");
+      return;
+    }
+
     setIsLoading(true);
 
     const formData = {
       inputType,
-      languageSign,
+      languageSign: languageSign.trim(),
       youtubeUrl: inputType === "youtube" ? youtubeUrl : "",
-      localFilePath: inputType === "local" ? localFilePath : "",
+      localFilePath: inputType === "local" ? localFilePath.trim() : "",
     };
 
     console.log("Données du formulaire :", formData);
@@ -30,21 +73,25 @@ const TranscriptionForm = ({ onTranscriptionComplete }) => {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const results = await response.json();
-        onTranscriptionComplete(results); // Appeler la fonction avec les résultats
-      } else {
-        console.error("Erreur lors de la transcription");
+      if (!response.ok) {
+        const backendError = await response.text();
+        throw new Error(backendError || "Erreur backend pendant la transcription.");
       }
+
+      const results = await response.json();
+      onTranscriptionComplete(results);
     } catch (error) {
       console.error("Erreur lors de la requête de transcription", error);
+      setErrorMessage(
+        "La génération des résultats a échoué. Vérifie le backend puis réessaie."
+      );
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="transcription-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label>
           <input
@@ -103,8 +150,22 @@ const TranscriptionForm = ({ onTranscriptionComplete }) => {
         </label>
       </div>
       <button type="submit" disabled={isLoading}>
-        {isLoading ? "Envoi en cours..." : "Envoyer"}
+        Envoyer
       </button>
+
+      {isLoading && (
+        <div className="processing-card" role="status" aria-live="polite">
+          <div className="processing-spinner" />
+          <div>
+            <p className="processing-title">{LOADING_MESSAGES[loadingStep]}</p>
+            <p className="processing-subtitle">
+              Le traitement peut prendre quelques secondes selon la taille du média.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {errorMessage && <p className="form-error">{errorMessage}</p>}
     </form>
   );
 };

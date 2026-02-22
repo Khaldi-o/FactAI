@@ -1,4 +1,4 @@
-.form-group {
+.transcription-form .form-group {
   margin-bottom: 20px;
   width: 500px;
   background: linear-gradient(#212121, #212121) padding-box,
@@ -15,7 +15,7 @@
   border-radius: 16px;
 }
 
-.form-group1 {
+.transcription-form .form-group1 {
   margin-bottom: 20px;
   width: 500px;
   background: linear-gradient(#212121, #212121) padding-box,
@@ -32,12 +32,12 @@
   border-radius: 16px;
 }
 
-label {
+.transcription-form label {
   display: block;
   margin-bottom: 12px;
 }
 
-input[type="text"] {
+.transcription-form input[type="text"] {
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -51,9 +51,9 @@ input[type="text"] {
   box-shadow: 1px 1px 6px #20232e, -1px -1px 6px #545b78;
 }
 
-button {
+.transcription-form button {
   height: 50px;
-  margin: 5px;
+  margin: 8px 0 0 0;
   width: 120px;
   background: #333;
   -webkit-box-pack: center;
@@ -77,7 +77,7 @@ button {
     inset 2px 2px 7px #212121, inset -3px -3px 8px #212121;
 }
 
-button:hover {
+.transcription-form button:hover {
   -webkit-box-shadow: 1px 1px 13px #20232e, -1px -1px 13px #545b78;
   box-shadow: 1px 1px 13px #20232e, -1px -1px 13px #545b78;
   color: #d6d6d6;
@@ -85,7 +85,7 @@ button:hover {
   transition: 500ms;
 }
 
-button:active {
+.transcription-form button:active {
   -webkit-box-shadow: 1px 1px 13px #20232e, -1px -1px 33px #545b78;
   box-shadow: 1px 1px 13px #20232e, -1px -1px 33px #545b78;
   color: #d6d6d6;
@@ -93,18 +93,71 @@ button:active {
   transition: 100ms;
 }
 
-button:disabled {
-  background: #cccccc;
+.transcription-form button:disabled {
+  opacity: 0.75;
   cursor: not-allowed;
 }
 
+.processing-card {
+  margin-top: 16px;
+  width: 500px;
+  border-radius: 14px;
+  border: 1px solid rgba(162, 121, 255, 0.35);
+  background: rgba(22, 23, 37, 0.82);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.processing-spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #66c7ff;
+  animation: spin 0.9s linear infinite;
+}
+
+.processing-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #f2f5ff;
+}
+
+.processing-subtitle {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #c7cbe8;
+}
+
+.form-error {
+  margin-top: 12px;
+  color: #ff9ea8;
+  font-size: 14px;
+  width: 500px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media screen and (max-width: 768px) {
-  .form-group,
-  .form-group1 {
+  .transcription-form .form-group,
+  .transcription-form .form-group1,
+  .processing-card {
+    width: 100%;
     padding: 20px;
   }
 
-  button {
+  .form-error {
+    width: 100%;
+  }
+
+  .transcription-form button {
     width: 100%;
   }
 }

@@ -1,32 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import "./ScoreCircle.css";
 
-const ScoreCircle = ({ percentage }) => {
-  const [animatedPercentage, setAnimatedPercentage] = useState(0);
-
-  useEffect(() => {
-    const animationDuration = 1000;
-    const step = (percentage - animatedPercentage) / (animationDuration / 16.7);
-
-    const animationInterval = setInterval(() => {
-      if (animatedPercentage < percentage) {
-        setAnimatedPercentage(animatedPercentage + step);
-      } else {
-        clearInterval(animationInterval);
-      }
-    }, 16.7);
-
-    return () => {
-      clearInterval(animationInterval);
-    };
-  }, [percentage, animatedPercentage]);
-
+const ScoreCircle = ({ percentage, stats }) => {
   const radius = 80;
   const circumference = 2 * Math.PI * radius;
+  const safePercentage = Math.max(0, Math.min(100, percentage || 0));
   const strokeDashoffset =
-    circumference - (animatedPercentage / 100) * circumference;
+    circumference - (safePercentage / 100) * circumference;
+  const strokeColor =
+    safePercentage >= 70 ? "#33d99e" : safePercentage >= 45 ? "#f6c36b" : "#ff697e";
 
   return (
-    <div style={{ width: "200px", height: "200px" }}>
+    <section className="score-card">
+      <h3>Score de fiabilité</h3>
       <svg width={200} height={200}>
         <circle
           cx={100}
@@ -40,10 +26,11 @@ const ScoreCircle = ({ percentage }) => {
           cx={100}
           cy={100}
           r={radius}
-          stroke="#e91e63"
+          stroke={strokeColor}
           strokeWidth={8}
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
+          style={{ transition: "stroke-dashoffset 650ms ease, stroke 300ms ease" }}
           fill="none"
           transform="rotate(-90 100 100)"
         />
@@ -53,11 +40,15 @@ const ScoreCircle = ({ percentage }) => {
           textAnchor="middle"
           dominantBaseline="middle"
           fill="#fff"
+          style={{ fontSize: "26px", fontWeight: 700 }}
         >
-          {`${Math.round(animatedPercentage)}%`}
+          {`${Math.round(safePercentage)}%`}
         </text>
       </svg>
-    </div>
+      <p className="score-subtitle">
+        {stats.trueCount} vraies, {stats.falseCount} fausses, {stats.unverifiableCount} non vérifiables
+      </p>
+    </section>
   );
 };
 

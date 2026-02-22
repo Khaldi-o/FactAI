@@ -8,6 +8,14 @@ import Sidebar from "./components/Sidebar";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 
+const normalizeVerification = (value = "") => {
+  const normalized = value.toLowerCase();
+  if (normalized.includes("vrai")) return "true";
+  if (normalized.includes("faux") || normalized.includes("fauss")) return "false";
+  if (normalized.includes("non") && normalized.includes("v")) return "unverifiable";
+  return "unverifiable";
+};
+
 function App() {
   const [transcriptionResults, setTranscriptionResults] = useState([]);
 
@@ -15,13 +23,32 @@ function App() {
     setTranscriptionResults(results);
   };
 
-  const calculateTruthPercentage = (results) => {
-    const totalCount = results.length;
-    const trueCount = results.filter(
-      (result) => result.Vérification === "Vraie"
-    ).length;
-    return totalCount > 0 ? Math.round((trueCount / totalCount) * 100) : 0;
+  const calculateVerificationStats = (results) => {
+    let trueCount = 0;
+    let falseCount = 0;
+    let unverifiableCount = 0;
+    let scoreAccumulator = 0;
+
+    results.forEach((result) => {
+      const category = normalizeVerification(result.Vérification || "");
+      if (category === "true") {
+        trueCount += 1;
+        scoreAccumulator += 1;
+      } else if (category === "false") {
+        falseCount += 1;
+      } else {
+        unverifiableCount += 1;
+        scoreAccumulator += 0.5;
+      }
+    });
+
+    const total = results.length;
+    const score = total > 0 ? Math.round((scoreAccumulator / total) * 100) : 0;
+
+    return { total, trueCount, falseCount, unverifiableCount, score };
   };
+
+  const stats = calculateVerificationStats(transcriptionResults);
 
   return (
     <Router>
@@ -38,10 +65,8 @@ function App() {
                   <TranscriptionForm
                     onTranscriptionComplete={handleTranscriptionComplete}
                   />
-                  <ResultTable results={transcriptionResults} />
-                  <ScoreCircle
-                    percentage={calculateTruthPercentage(transcriptionResults)}
-                  />
+                  <ResultTable results={transcriptionResults} stats={stats} />
+                  <ScoreCircle percentage={stats.score} stats={stats} />
                 </div>
               }
             />

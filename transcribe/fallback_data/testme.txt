@@ -1,0 +1,5 @@
+Si on imaginait un tunnel qui traverse toute la Terre, on pourrait tomber vers le centre puis ressortir de l'autre côté.
+Dans un modèle idéal sans air, sans frottement et avec des hypothèses simplifiées, le trajet jusqu'à l'autre côté prendrait environ 42 minutes.
+En pratique, les frottements feraient perdre de l'énergie et le mouvement finirait par s'arrêter près du centre.
+Le noyau terrestre atteint des températures extrêmes, autour de plusieurs milliers de degrés, ce qui rend ce tunnel irréaliste aujourd'hui.
+L'idée illustre bien certains principes de physique, mais elle dépend d'hypothèses très fortes.
