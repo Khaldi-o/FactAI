@@ -17,6 +17,8 @@ L'utilisateur indique un lien YouTube ou un fichier local (upload) en iput, l'ap
   - ou chemin de fichier local
 - Envoi au backend Python -Flask- (`POST /api/transcribe`).
 
+![Form](screeens/forms.png)
+
 ### 2. Pré-traitement média
 
 - Conversion vers WAV avec `ffmpeg`.
@@ -27,19 +29,14 @@ L'utilisateur indique un lien YouTube ou un fichier local (upload) en iput, l'ap
 - Transcription via `tafrigh` + Wit.ai (selon langue et clés disponibles).
 - Segmentation des phrases en idées plus structurées pour éviter des fragments hors contexte.
 
+![Table](screeens/table_verif.png)
+
 ### 4. Vérification
 
 - Vérification via OpenAI.
-- Si indisponible/erreur: fallback local automatique.
+- Affichage d'un Tableau des vérifications avec un score de fiabilité:
 
-### 5. Fallback
-
-En cas d'échec du pipeline principal (api key non valid par exp), le backend renvoie automatiquement:
-
-1. `transcribe/fallback_data/verification_table_demo.csv`
-2. sinon `transcribe/fallback_data/testme.txt`
-
-Ce fallback évite du vide côté front.
+![Score](screeens/score.png)
 
 ## Stack technique
 
@@ -47,7 +44,7 @@ Ce fallback évite du vide côté front.
 - **Backend**: Python, Flask
 - **Audio/vidéo**: ffmpeg, yt-dlp
 - **Transcription**: tafrigh + Wit.ai
-- **IA (optionnelle)**: Azure OpenAI/OpenAI selon config
+- **IA (API LLM)**: Azure OpenAI/OpenAI selon config
 - **Conteneurisation**: Docker
 
 ## Lancer le projet
